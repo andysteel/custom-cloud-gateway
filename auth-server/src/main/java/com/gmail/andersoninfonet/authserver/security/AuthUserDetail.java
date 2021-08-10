@@ -30,9 +30,9 @@ public class AuthUserDetail implements UserDetails {
     public AuthUserDetail(final AuthUser user) {
         this.username = user.getLogin();
         this.password = user.getPassword();
-        this.active = user.getIsEnable().equals(EnableEnum.YES);
+        this.active = user.getIsEnable().equals(EnableEnum.Y);
         this.passwordExpiredDate = user.getPasswordExpiredDate();
-        this.locked = user.getIsBlocked().equals(BlockedEnum.YES);
+        this.locked = user.getIsBlocked().equals(BlockedEnum.Y);
     }
 
     @Override

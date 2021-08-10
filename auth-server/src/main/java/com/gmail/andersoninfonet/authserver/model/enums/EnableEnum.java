@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 public enum EnableEnum {
     
-    YES('Y'),
-    NO('N');
+    Y('Y'),
+    N('N');
 
     private Character isEnable;
 
     /**
      * @param isEnable
      */
-    private EnableEnum(Character isEnable) {
+    private EnableEnum(final Character isEnable) {
         this.isEnable = isEnable;
     }
 
@@ -20,7 +20,7 @@ public enum EnableEnum {
         return this.isEnable;
     }
 
-    public EnableEnum getFromValue(Character value) {
+    public static EnableEnum getFromValue(final Character value) {
         return Arrays.stream(EnableEnum.values()).filter(v -> v.getIsEnable().equals(value)).findFirst().orElse(null);
     }
 }

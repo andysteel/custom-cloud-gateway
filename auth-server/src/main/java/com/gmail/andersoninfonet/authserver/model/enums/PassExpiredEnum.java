@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 public enum PassExpiredEnum {
     
-    YES('Y'),
-    NO('N');
+    Y('Y'),
+    N('N');
 
     private Character isPassExpired;
 
     /**
      * @param isPassExpired
      */
-    private PassExpiredEnum(Character isPassExpired) {
+    private PassExpiredEnum(final Character isPassExpired) {
         this.isPassExpired = isPassExpired;
     }
 
@@ -20,7 +20,7 @@ public enum PassExpiredEnum {
         return this.isPassExpired;
     }
 
-    public PassExpiredEnum getFromValue(Character value) {
+    public static PassExpiredEnum getFromValue(final Character value) {
         return Arrays.stream(PassExpiredEnum.values()).filter(v -> v.getIsPassExpired().equals(value)).findFirst().orElse(null);
     }
 }

@@ -10,16 +10,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.gmail.andersoninfonet.authserver.model.enums.BlockedEnum;
 import com.gmail.andersoninfonet.authserver.model.enums.EnableEnum;
 import com.gmail.andersoninfonet.authserver.model.enums.PassExpiredEnum;
-
-import org.springframework.data.annotation.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,26 +49,23 @@ public class AuthUser implements Serializable {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "IS_BLOCKED", nullable = false, length = 1)
+    @Column(name = "IS_BLOCKED", columnDefinition = "char", nullable = false)
     private BlockedEnum isBlocked;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "UPDATED_AT", nullable = false)
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "IS_PASS_EXPIRED", columnDefinition = "CHAR", nullable = false, length = 1)
+    @Column(name = "IS_PASS_EXPIRED", columnDefinition = "char", nullable = false)
     private PassExpiredEnum isPasswordExpired;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "UPDATED_AT", nullable = false)
+    @Column(name = "PASS_EXPIRE_DATE", nullable = false)
     private LocalDate passwordExpiredDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "IS_ENABLE", columnDefinition = "CHAR", nullable = false, length = 1)
+    @Column(name = "IS_ENABLE", columnDefinition = "char", nullable = false)
     private EnableEnum isEnable;
 }
