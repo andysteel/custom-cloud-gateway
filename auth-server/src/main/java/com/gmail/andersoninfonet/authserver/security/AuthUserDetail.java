@@ -1,10 +1,12 @@
 package com.gmail.andersoninfonet.authserver.security;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import com.gmail.andersoninfonet.authserver.model.Access;
 import com.gmail.andersoninfonet.authserver.model.AuthUser;
 import com.gmail.andersoninfonet.authserver.model.enums.BlockedEnum;
 import com.gmail.andersoninfonet.authserver.model.enums.EnableEnum;
@@ -27,12 +29,16 @@ public class AuthUserDetail implements UserDetails {
     /**
      * @param username
      * */
-    public AuthUserDetail(final AuthUser user) {
+    public AuthUserDetail(final AuthUser user, final List<Access> accesses) {
         this.username = user.getLogin();
         this.password = user.getPassword();
         this.active = user.getIsEnable().equals(EnableEnum.Y);
         this.passwordExpiredDate = user.getPasswordExpiredDate();
         this.locked = user.getIsBlocked().equals(BlockedEnum.Y);
+        if(accesses != null && !accesses.isEmpty()) {
+            roles = new ArrayList<>();
+            accesses.forEach(a -> roles.add(new SimpleGrantedAuthority(a.getRole().getName().concat("/").concat(a.getPrivilege().getName()))));
+        }
     }
 
     @Override

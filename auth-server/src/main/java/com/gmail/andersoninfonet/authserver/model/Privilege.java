@@ -22,17 +22,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ROLE", schema = "AUTH_SCHEMA")
+@Table(name = "PRIVILEGE", schema = "AUTH_SCHEMA")
 @NoArgsConstructor
 @Data
-public class Role implements Serializable {
+public class Privilege implements Serializable {
 
-    private static final long serialVersionUID = 3364890340566556267L;
+    private static final long serialVersionUID = 2749788727244286560L;
     
     @Id
     @Column(name = "ID", nullable = false, length = 10)
-    @SequenceGenerator(name = "SEQ_ROLE", sequenceName = "SEQ_ROLE", schema = "AUTH_SCHEMA", allocationSize = 1)
-    @GeneratedValue(generator = "SEQ_ROLE", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "SEQ_PRIVILEGE", sequenceName = "SEQ_PRIVILEGE", schema = "AUTH_SCHEMA", allocationSize = 1)
+    @GeneratedValue(generator = "SEQ_PRIVILEGE", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "NAME", nullable = false, length = 200)
@@ -44,12 +44,9 @@ public class Role implements Serializable {
     @Column(name = "UPDATED_AT", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "DESCRIPTION", nullable = false, length = 200)
-    private String description;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "APP_ID", referencedColumnName = "ID")
-    private Application application;
+    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "IS_ENABLE", columnDefinition = "char", nullable = false)

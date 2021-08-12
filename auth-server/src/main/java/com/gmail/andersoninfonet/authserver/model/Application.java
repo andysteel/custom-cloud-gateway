@@ -7,12 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -22,17 +19,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ROLE", schema = "AUTH_SCHEMA")
+@Table(name = "APPLICATION", schema = "AUTH_SCHEMA")
 @NoArgsConstructor
 @Data
-public class Role implements Serializable {
+public class Application implements Serializable {
 
-    private static final long serialVersionUID = 3364890340566556267L;
+    private static final long serialVersionUID = -3209755581046882279L;
     
     @Id
     @Column(name = "ID", nullable = false, length = 10)
-    @SequenceGenerator(name = "SEQ_ROLE", sequenceName = "SEQ_ROLE", schema = "AUTH_SCHEMA", allocationSize = 1)
-    @GeneratedValue(generator = "SEQ_ROLE", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "SEQ_APPLICATION", sequenceName = "SEQ_APPLICATION", schema = "AUTH_SCHEMA", allocationSize = 1)
+    @GeneratedValue(generator = "SEQ_APPLICATION", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "NAME", nullable = false, length = 200)
@@ -47,9 +44,23 @@ public class Role implements Serializable {
     @Column(name = "DESCRIPTION", nullable = false, length = 200)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "APP_ID", referencedColumnName = "ID")
-    private Application application;
+    @Column(name = "APP_ID", nullable = false, length = 200)
+    private String appID;
+
+    @Column(name = "APP_SECRET", nullable = false, length = 200)
+    private String appSecret;
+
+    @Column(name = "URL", nullable = false, length = 200)
+    private String url;
+
+    @Column(name = "WEB_CONTEXT", nullable = false, length = 200)
+    private String webContext;
+
+    @Column(name = "PORT", nullable = false, length = 5)
+    private Integer port;
+
+    @Column(name = "URI", nullable = false, length = 1000)
+    private String uri;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "IS_ENABLE", columnDefinition = "char", nullable = false)

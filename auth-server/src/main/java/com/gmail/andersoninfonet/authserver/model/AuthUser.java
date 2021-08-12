@@ -18,20 +18,16 @@ import com.gmail.andersoninfonet.authserver.model.enums.BlockedEnum;
 import com.gmail.andersoninfonet.authserver.model.enums.EnableEnum;
 import com.gmail.andersoninfonet.authserver.model.enums.PassExpiredEnum;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name = "USER", schema = "AUTH_SCHEMA")
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Data
 public class AuthUser implements Serializable {
+
+    private static final long serialVersionUID = 4662169118604067966L;
 
     @Id
     @Column(name = "ID", nullable = false, length = 10)
