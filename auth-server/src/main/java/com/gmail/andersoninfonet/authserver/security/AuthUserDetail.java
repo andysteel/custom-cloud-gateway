@@ -1,12 +1,12 @@
 package com.gmail.andersoninfonet.authserver.security;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.gmail.andersoninfonet.authserver.model.Access;
 import com.gmail.andersoninfonet.authserver.model.AuthUser;
 import com.gmail.andersoninfonet.authserver.model.enums.BlockedEnum;
 import com.gmail.andersoninfonet.authserver.model.enums.EnableEnum;
@@ -20,31 +20,31 @@ public class AuthUserDetail implements UserDetails {
 
     private String username;
     private String password;
-    private List<GrantedAuthority> roles;
+    private Set<GrantedAuthority> roles;
     private boolean active;
     private LocalDate passwordExpiredDate;
-    private boolean locked;
+    private boolean nonLocked;
     
 
     /**
      * @param username
      * */
-    public AuthUserDetail(final AuthUser user, final List<Access> accesses) {
+    public AuthUserDetail(final AuthUser user,  final Set<Map<String, Object>> accesses) {
         this.username = user.getLogin();
         this.password = user.getPassword();
         this.active = user.getIsEnable().equals(EnableEnum.Y);
         this.passwordExpiredDate = user.getPasswordExpiredDate();
-        this.locked = user.getIsBlocked().equals(BlockedEnum.Y);
+        this.nonLocked = user.getIsBlocked().equals(BlockedEnum.N);
         if(accesses != null && !accesses.isEmpty()) {
-            roles = new ArrayList<>();
-            accesses.forEach(a -> roles.add(new SimpleGrantedAuthority(a.getRole().getName().concat("/").concat(a.getPrivilege().getName()))));
+            roles = new HashSet<>();
+            roles.add(new SimpleGrantedAuthority("ROLE_ACCESS/"+accesses.toString().replace("=", ":")));
         }
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 		if (roles == null) {
-			roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+			roles = Collections.emptySet();
 		}
 		return roles;
     }
@@ -66,7 +66,7 @@ public class AuthUserDetail implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.locked;
+        return this.nonLocked;
     }
 
     @Override

@@ -44,11 +44,11 @@ public class Privilege implements Serializable {
     @Column(name = "UPDATED_AT", nullable = false)
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
-    private Role role;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "IS_ENABLE", columnDefinition = "char", nullable = false)
     private EnableEnum isEnable;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
+    private Role role;
 }

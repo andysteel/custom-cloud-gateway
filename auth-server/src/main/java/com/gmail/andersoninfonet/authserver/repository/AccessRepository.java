@@ -3,13 +3,16 @@ package com.gmail.andersoninfonet.authserver.repository;
 import java.util.List;
 
 import com.gmail.andersoninfonet.authserver.model.Access;
-import com.gmail.andersoninfonet.authserver.model.AuthUser;
+import com.gmail.andersoninfonet.authserver.model.keys.AccessPK;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AccessRepository extends JpaRepository<Access, Long> {
+public interface AccessRepository extends JpaRepository<Access, AccessPK> {
     
-    List<Access> findAllByUser(final AuthUser user);
+    @Query(value = "select acs from Access acs where acs.accessPK.user.id=:userId")
+    List<Access> findAllByUser(@Param("userId") final Long userId);
 }

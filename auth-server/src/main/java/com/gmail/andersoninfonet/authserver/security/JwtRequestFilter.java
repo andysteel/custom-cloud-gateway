@@ -12,17 +12,20 @@ import com.gmail.andersoninfonet.authserver.service.AuthUserDetailService;
 import com.gmail.andersoninfonet.authserver.util.JwtUtil;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -30,7 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final AuthUserDetailService authUserDetailService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain)
             throws ServletException, IOException {
         final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         
@@ -49,6 +52,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 final UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
                 upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(upat);
+            } else {
+                throw new AccessDeniedException("User not authorized.");
             }
         }
 

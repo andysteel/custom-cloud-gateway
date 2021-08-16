@@ -5,19 +5,17 @@ import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class AuthRequest implements Serializable {
+public class RoleRequest implements Serializable {
     
-    @NotBlank(message = "Username must be informed")
-    private String username;
+    @NotBlank(message = "appID must be informed")
+    private String appID;
 
-    @NotBlank(message = "Password must be informed")
-    private String password;
+    @NotBlank(message = "role must be informed")
+    private String role;
 }
