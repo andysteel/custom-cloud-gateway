@@ -2,9 +2,15 @@ package com.gmail.andersoninfonet.authserver.util;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gmail.andersoninfonet.authserver.dto.AccessDTO;
+import com.gmail.andersoninfonet.authserver.exception.AuthServerException;
 import com.gmail.andersoninfonet.authserver.request.RoleRequest;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +26,8 @@ public class JwtUtil {
     
     @Value("${secret.key}")
     private String secretKey;
+
+    private static final String ROLE_ACCESS = "ROLE_ACCESS";
 
     public String extractUsername(final String token) {
         return extractClaim(token, Claims::getSubject);
@@ -39,12 +47,27 @@ public class JwtUtil {
     }
 
     public String generateToken(final UserDetails userDetail, final RoleRequest request) {
+        final Map<String, Object> mountClaims = new HashMap<>();
         final Map<String, Object> claims = new HashMap<>();
         if(userDetail.getAuthorities() != null && !userDetail.getAuthorities().isEmpty()) {
             userDetail.getAuthorities().forEach(a -> {
                 final String[] authorities = a.getAuthority().split("/");
-                claims.put(authorities[0], authorities[1]);
+                mountClaims.put(authorities[0], authorities[1]);
             });
+        }
+        try {
+            final ObjectMapper objectMapper = new ObjectMapper();
+            final List<AccessDTO> accessList =  objectMapper.readValue((String) mountClaims.get(ROLE_ACCESS), new TypeReference<List<AccessDTO>>(){});
+            if(accessList != null && !accessList.isEmpty()) {
+                accessList.forEach(access -> {
+                    if(access.getAppId().equals(request.getAppID()) && (access.getRole().equals(request.getRole()))) {
+                        claims.put(ROLE_ACCESS, access);
+                    }
+                });
+            }
+
+        } catch(JsonProcessingException ex) {
+            throw new AuthServerException(ex.getMessage());
         }
 
         return this.createToken(claims, userDetail);
