@@ -35,7 +35,11 @@ public class AuthUserDetailService implements UserDetailsService {
 
     private final PrivilegeRepository privilegeRepository;
 
-    private static final String APP_ID = "APP_ID";
+    private static final String APP_ID = "appId";
+
+    private static final String ROLE = "role";
+
+    private static final String PRIVILEGES = "privileges";
     
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
@@ -60,7 +64,8 @@ public class AuthUserDetailService implements UserDetailsService {
                         .forEach(p -> role.getPrivileges().add("\""+p+"\""));
             final Map<String, Object> authorities = new HashMap<>();
             authorities.put("\""+APP_ID+"\"", "\""+acs.getAccessPK().getApplication().getAppID()+"\"");
-            authorities.put("\""+role.getName()+"\"", role.getPrivileges());
+            authorities.put("\""+ROLE+"\"", "\""+role.getName()+"\"");
+            authorities.put("\""+PRIVILEGES+"\"", role.getPrivileges());
             roles.add(authorities);
 
         });
