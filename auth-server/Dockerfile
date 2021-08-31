@@ -1,8 +1,7 @@
 FROM openjdk:11
 WORKDIR /app
-RUN mkdir -p /app/logs \
-&& echo "America/Sao_Paulo" > /etc/timezone \
-&& dpkg-reconfigure -f noninteractive tzdata
+RUN ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime \
+&& mkdir -p /logs
 EXPOSE 8181
-COPY target/auth-server.jar app/auth-server.jar 
-ENTRYPOINT ["java","-jar","app/auth-server.jar"]
+COPY target/auth-server.jar auth-server.jar
+ENTRYPOINT ["java","-jar","auth-server.jar"]
